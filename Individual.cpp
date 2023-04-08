@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <iostream>
 #include <typeinfo>
-#include <vector>;
+#include <vector>
 #include <random>
 #include <algorithm>
 #include<numeric>

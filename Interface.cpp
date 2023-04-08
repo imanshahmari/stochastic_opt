@@ -6,7 +6,8 @@
 #include "Model.h"
 
 #include <algorithm>
-
+#include <cmath>
+#include <omp.h>
 
 
 int main()
@@ -26,6 +27,7 @@ int main()
 	int nrPositions = read_record(FILENAME, positions);
 	int nrDeltaTs = nrPositions - 1;
 
+	std::cout << "number of DeltaTs:" << nrDeltaTs << std::endl;
 
 
 	IndividualParameters indParameters;
@@ -41,7 +43,7 @@ int main()
 	ModelParameters modelParameters;
 	modelParameters.indParameters = indParameters;
 	modelParameters.constantDeltasRatio = 0.0;
-	modelParameters.populationSize = 10;
+	modelParameters.populationSize = 1000;
 	modelParameters.nrGenerations = 100;
 	modelParameters.crossOverProb = 0.85;
 	modelParameters.mutationProb = 0.2;
@@ -73,13 +75,17 @@ int main()
 
 
 
+	
 	//Start Optimiziation loop:
 	model.maximumFitnessInCurrentGeneration = 0;
 	float bestFitness;
 
 	for (int i = 0; i < modelParameters.nrGenerations; i++) {
 		//Evaluate individuals:
+
+		#pragma omp parallel for num_threads(4)
 		for (auto& ind : model.population) {
+			std::cout << 
 			ind.EvaluateIndividual();
 			if (ind.fitness > model.maximumFitnessInCurrentGeneration) {
 				model.maximumFitnessInCurrentGeneration = ind.fitness;
@@ -91,15 +97,19 @@ int main()
 		int ind1Id = model.TournementSelect();
 		int ind2Id = model.TournementSelect();
 
+		std::cout << "indexes are:" <<ind1Id << "," <<ind2Id << std::endl;
+
 		float randomNumber = Individual::GenerateRandomFloat(0.0, 1.0);
 
+		
 		//Crossover
 		if (randomNumber <= modelParameters.crossOverProb) {
 			model.Cross(model.population[ind1Id], model.population[ind2Id]);
 		}
+		
 
 		//Elitisim
-		//model.population[model.bestIndividualId] = model.population[model.bestIndividualId];
+		model.population[model.bestIndividualId] = model.population[model.bestIndividualId];
 
 
 
@@ -107,7 +117,7 @@ int main()
 			model.Mutate(ind);
 		}
 
-		//std::cout << "Genration Number:" << i << "     Best Fitness:" << model.maximumFitnessInCurrentGeneration << std::endl;
+		std::cout << "Genration Number:" << i << "     Best Fitness:" << model.maximumFitnessInCurrentGeneration << std::endl;
 
 		/*
 		for (auto& ind : model.population) {
@@ -116,7 +126,9 @@ int main()
 
 		}
 		*/
+		
 	}
+	
 
 	for (int i = 0; i < rows; i++) {
 		delete[] positions[i];
@@ -174,7 +186,7 @@ int read_record(std::string fileName, float** positions)
 		for (int i = 0; i < 6; i++) {
 			sum += diff[i] * diff[i];
 		}
-		if ( std::sqrt(sum) > 0.1){
+		if ( sqrt(sum) > 0.1){
 			for (int i = 2; i < 8; i++) {
 				positions[index][i-2] = std::stof(content[j][i]);
 

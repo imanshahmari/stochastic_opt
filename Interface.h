@@ -11,7 +11,7 @@
 #include <sstream>
 
 
-#define FILENAME "C:\\Users\\SEIMSHA\\Documents\\Genetic_c\\genetic\\genetic\\sarmad.csv"
+#define FILENAME "sarmad.csv"
 
 
 

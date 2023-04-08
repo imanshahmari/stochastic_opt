@@ -35,33 +35,37 @@ int Model::TournementSelect() {
     //ROOT OF THE PROBLEM !!!!!!!!!!!!!!!
     
     
-    int* indexes = new int[parameters.tournamentSize + 1];
+    //int* indexes = new int[parameters.tournamentSize + 1];
+
+    std::vector<int> indexes;
     //std::vector<int> = indexes(parameters.tournamentSize + 1);
     std::vector<Individual> tournamentIndivids;
 
     srand(time(NULL));
     for (int i = 0; i < parameters.tournamentSize; i++) {
-        indexes[i] = rand() % parameters.populationSize;
-        tournamentIndivids.push_back(population[indexes[i]]);
+        int index = rand() % parameters.populationSize;
+        indexes.push_back(index);
+        tournamentIndivids.push_back(population[index]);
     }
 
     //std::cout << tournamentIndivids[0].chromLen << std::endl;
     float randomNumber = Individual::GenerateRandomFloat(0.0,1.0);
-    int lastInd = parameters.tournamentSize;
+    int lastInd = parameters.tournamentSize -1;
     float prob = parameters.tournamentProb * pow((1.0 - parameters.tournamentProb), lastInd);
     if (randomNumber > parameters.tournamentProb) {
         return tournamentIndivids[0].id;
     }
     std::sort(tournamentIndivids.begin(), tournamentIndivids.end());
     while (randomNumber >= prob) {
-        lastInd--;
         prob = parameters.tournamentProb * pow((1.0 - parameters.tournamentProb), lastInd);
+        lastInd--;
     }
+
     //std::cout << "breakpoint 1 reached" << indexes[0] << indexes[1] << std::endl;
     //std::sort(tournamentIndivids.begin(), tournamentIndivids.end());
     //std::cout << "breakpoint 2 reached" << std::endl;
 
-    delete[] indexes;
+    //delete[] indexes;
 
     return tournamentIndivids[lastInd].id;
 }
@@ -71,6 +75,8 @@ void Model::Cross(Individual& ind1, Individual& ind2) {
 
     int lengden = ind1.getLen();
     int crossIndex = rand() % ind1.getLen();
+    std::cout << "getLen gives:" << ind1.getLen() << std::endl;    
+    std::cout << "crossIndex is:" << crossIndex << std::endl;
 
     for (int i = 0; i < crossIndex;i++) {
         float tempValueInd1 = ind1.chromosome[i];
