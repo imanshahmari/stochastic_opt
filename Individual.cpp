@@ -25,7 +25,7 @@ Individual::Individual(IndividualParameters passedParameters,int idNumber) {
 void Individual::InitilizeConstant() {
     //intilize chromosome with constant deltas
     //float deltaT = 0.012;
-    float deltaT = GenerateRandomFloat(0.0, 0.2);
+    float deltaT = GenerateRandomFloat(0.0, 0.1);
     for (int i = 0; i < indParameters.nrDeltaTs; i++) {
         chromosome.push_back(deltaT);
     }
@@ -116,12 +116,11 @@ bool Individual::operator>(const Individual& other) const {
 
 
 float Individual::GenerateRandomFloat(float lowerBound, float upperBound) {
-    std::random_device rand_dev;
-    std::mt19937 generator(rand_dev());
+    static std::random_device rand_dev;
+    static std::mt19937 generator(rand_dev());
     std::uniform_real_distribution distr(lowerBound, upperBound);
-    float randomNumber;
-    randomNumber = distr(generator);
-
+    float randomNumber = distr(generator);
+    
     return randomNumber;
 }
 

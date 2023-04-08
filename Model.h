@@ -42,6 +42,7 @@ public:
     void Cross(Individual& ind1, Individual& ind2);
     void Mutate(Individual& ind);
     int TournementSelect();
+    void Elitisim();
 
 
 

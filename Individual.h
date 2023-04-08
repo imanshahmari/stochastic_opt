@@ -19,8 +19,6 @@ struct IndividualParameters {
     int nrJoints;
     int nrPositions;
     float endTime;
-    float mu;
-    float sigma;
 };
 
 

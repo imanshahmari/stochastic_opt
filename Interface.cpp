@@ -45,80 +45,77 @@ int main()
 	modelParameters.constantDeltasRatio = 0.0;
 	modelParameters.populationSize = 1000;
 	modelParameters.nrGenerations = 100;
-	modelParameters.crossOverProb = 0.85;
-	modelParameters.mutationProb = 0.2;
-	modelParameters.creepProba = 0.5;
-	modelParameters.creepRate = 0.0125;
-	modelParameters.tournamentProb = 0.6;
-	modelParameters.tournamentSize = 1;
-
-
-	Individual ind1(indParameters,500);
-	ind1.InitilizeConstant();
-	ind1.EvaluateIndividual();
-
-	Individual ind2(indParameters,502);
-	ind2.InitilizeConstant();
-	ind2.EvaluateIndividual();
+	modelParameters.crossOverProb = 0.5;
+	modelParameters.mutationProb = 0.0;
+	modelParameters.creepProba = 0.8;
+	modelParameters.creepRate = 0.005;
+	modelParameters.tournamentProb = 0.9;
+	modelParameters.tournamentSize = 3;
 	
 
 	//Initilize population
 
 	Model model = Model("lamdaMu", modelParameters);
 	model.InitilizePopulation();
-	/*
-	auto test = model.TournementSelect();
-	model.Cross(ind1,ind2);
-	model.Mutate(ind1);
-	std::cout << "hello" << std::endl;
-	*/
+	Individual bestIndividual(indParameters,0);
 
-
-
-	
+	srand(time(NULL));
 	//Start Optimiziation loop:
+	float maxFitness;
+
+
+
 	model.maximumFitnessInCurrentGeneration = 0;
-	float bestFitness;
 
 	for (int i = 0; i < modelParameters.nrGenerations; i++) {
-		//Evaluate individuals:
 
-		#pragma omp parallel for num_threads(4)
+		std::cout << "Genration Number:" << i << "   First individual fitness:" << model.population[0].fitness << std::endl;
+		model.maximumFitnessInCurrentGeneration = 0;
+		model.population[0] = bestIndividual;
+		std::cout << "BESTINDIVIDAL:" << bestIndividual.fitness << std::endl;
+		std::cout << "MODEL[0]:" << model.population[0].fitness << std::endl;
+		//Evaluate individuals:
+		//#pragma omp parallel for
 		for (auto& ind : model.population) {
-			std::cout << 
 			ind.EvaluateIndividual();
 			if (ind.fitness > model.maximumFitnessInCurrentGeneration) {
 				model.maximumFitnessInCurrentGeneration = ind.fitness;
 				model.bestIndividualId = ind.id;
+				if(ind.fitness > maxFitness){
+					maxFitness = ind.fitness;
+				}
 			}
 		}
 
-		//Tournament selection
-		int ind1Id = model.TournementSelect();
-		int ind2Id = model.TournementSelect();
+		//#pragma omp parallel for
+		for(int i = 0; i < modelParameters.populationSize; i = i + 2){
+					//Tournament selection
+			int ind1Id = model.TournementSelect();
+			int ind2Id = model.TournementSelect();
 
-		std::cout << "indexes are:" <<ind1Id << "," <<ind2Id << std::endl;
+			//std::cout << "indexes are:" <<ind1Id << "," <<ind2Id << std::endl;
 
-		float randomNumber = Individual::GenerateRandomFloat(0.0, 1.0);
+			float randomNumber = Individual::GenerateRandomFloat(0.0, 1.0);
 
-		
-		//Crossover
-		if (randomNumber <= modelParameters.crossOverProb) {
-			model.Cross(model.population[ind1Id], model.population[ind2Id]);
+			
+			//Crossover
+			if (randomNumber <= modelParameters.crossOverProb) {
+				model.Cross(model.population[ind1Id], model.population[ind2Id]);
+			}
 		}
-		
 
 		//Elitisim
-		model.population[model.bestIndividualId] = model.population[model.bestIndividualId];
 
+		bestIndividual = model.population[model.bestIndividualId];
+		bestIndividual.id = 0;
 
 
 		for (auto& ind : model.population) {
 			model.Mutate(ind);
 		}
 
-		std::cout << "Genration Number:" << i << "     Best Fitness:" << model.maximumFitnessInCurrentGeneration << std::endl;
 
+		std::cout << "Genration Number:" << i << "   Current Best Fitness:" << model.maximumFitnessInCurrentGeneration << std::endl;
 		/*
 		for (auto& ind : model.population) {
 
