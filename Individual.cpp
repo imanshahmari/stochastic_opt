@@ -25,7 +25,7 @@ Individual::Individual(IndividualParameters passedParameters,int idNumber) {
 void Individual::InitilizeConstant() {
     //intilize chromosome with constant deltas
     //float deltaT = 0.012;
-    float deltaT = GenerateRandomFloat(0.0, 0.1);
+    float deltaT = GenerateRandomFloat(0.0, 0.5);
     for (int i = 0; i < indParameters.nrDeltaTs; i++) {
         chromosome.push_back(deltaT);
     }

@@ -42,8 +42,8 @@ int main()
 
 	ModelParameters modelParameters;
 	modelParameters.indParameters = indParameters;
-	modelParameters.constantDeltasRatio = 0.0;
-	modelParameters.populationSize = 1000;
+	modelParameters.constantDeltasRatio = 0.9;
+	modelParameters.populationSize = 10000;
 	modelParameters.nrGenerations = 100;
 	modelParameters.crossOverProb = 0.5;
 	modelParameters.mutationProb = 0.0;
@@ -75,7 +75,7 @@ int main()
 		std::cout << "BESTINDIVIDAL:" << bestIndividual.fitness << std::endl;
 		std::cout << "MODEL[0]:" << model.population[0].fitness << std::endl;
 		//Evaluate individuals:
-		//#pragma omp parallel for
+		#pragma omp parallel for
 		for (auto& ind : model.population) {
 			ind.EvaluateIndividual();
 			if (ind.fitness > model.maximumFitnessInCurrentGeneration) {
@@ -87,7 +87,7 @@ int main()
 			}
 		}
 
-		//#pragma omp parallel for
+		#pragma omp parallel for
 		for(int i = 0; i < modelParameters.populationSize; i = i + 2){
 					//Tournament selection
 			int ind1Id = model.TournementSelect();
