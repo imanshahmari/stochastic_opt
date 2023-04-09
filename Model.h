@@ -27,15 +27,19 @@ struct ModelParameters {
 class Model
 {
 public:
-
+    
+    Model(ModelParameters passedParameters);
+    
     ModelParameters parameters;
     std::string modelType;
-    std::vector <std::string> hallOfFame;
+
+    std::vector<float> bestChromosomes;
+
+
     float maximumFitnessInCurrentGeneration;
     int bestIndividualId;
 
     std::vector<Individual> population;
-    Model(std::string, ModelParameters passedParameters);
 
     void InitilizePopulation();
 

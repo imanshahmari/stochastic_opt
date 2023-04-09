@@ -5,6 +5,8 @@
 #include <array>
 #include <vector>
 #include <stdexcept>
+#include <random>
+#include <iostream>
 
 //Structs and template classes:
 
@@ -67,7 +69,7 @@ class Individual
         void Derivative();
         void EvaluateIndividual();
 
-        static float GenerateRandomFloat(float lowerBound, float upperBound);
+        //float GenerateRandomFloat(float lowerBound, float upperBound);
 
         bool operator<(const Individual& other) const;
 
@@ -78,6 +80,18 @@ class Individual
 
         int getLen() { return chromLen; }
         int getId() { return id; }
+        static inline float GenerateRandomFloat(float lowerBound, float upperBound) {
+            /*
+            static std::random_device rand_dev;
+            static std::mt19937 generator(rand_dev());
+            std::uniform_real_distribution<float> distr(lowerBound, upperBound);
+            float randomNumber = distr(generator);
+            
+            return randomNumber;
+            */
+            //std::cout << "randomNumber:" << (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * (upperBound - lowerBound) + lowerBound << std::endl;
+            return (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * (upperBound - lowerBound) + lowerBound;
+        }
 
     //~Individual();
 };

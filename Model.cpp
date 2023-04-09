@@ -8,9 +8,8 @@
 #include <set>
 #include <time.h>
 
-Model::Model(std::string inputModel, ModelParameters passedParameters) {
+Model::Model(ModelParameters passedParameters) {
     //constructor 
-    modelType = inputModel;
     parameters = passedParameters;
 }
 

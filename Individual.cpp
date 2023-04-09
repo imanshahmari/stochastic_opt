@@ -3,9 +3,8 @@
 #include <iostream>
 #include <typeinfo>
 #include <vector>
-#include <random>
 #include <algorithm>
-#include<numeric>
+#include <numeric>
 
 
 
@@ -78,6 +77,7 @@ void Individual::Derivative() {
         for (int k = 0; k < indParameters.nrJoints; k++) {
             accelerations[i - 1][k] = (velocities[i][k] - velocities[i-1][k]) / chromosome[j];
         }
+        
     }
     mechUnits.velocities = velocities;
     mechUnits.accelerations = accelerations;
@@ -114,17 +114,19 @@ bool Individual::operator>(const Individual& other) const {
     return fitness > other.fitness;
 }
 
-
+/*
 float Individual::GenerateRandomFloat(float lowerBound, float upperBound) {
+    
     static std::random_device rand_dev;
     static std::mt19937 generator(rand_dev());
-    std::uniform_real_distribution distr(lowerBound, upperBound);
+    std::uniform_real_distribution<float> distr(lowerBound, upperBound);
     float randomNumber = distr(generator);
     
     return randomNumber;
+    
+    return (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * (upperBound - lowerBound) + lowerBound;
 }
-
-
+*/
 
 /*
 Individual::~Individual() {

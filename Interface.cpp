@@ -1,7 +1,6 @@
 ﻿// genetic.cpp : Defines the entry point for the application.
 //
 
-#include "Interface.h"
 #include "Individual.h"
 #include "Model.h"
 
@@ -9,9 +8,27 @@
 #include <cmath>
 #include <omp.h>
 
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <sstream>
+#include <iterator>
+
+
+#define FILENAME "sarmad.csv"
+
+
+
+int read_record(std::string, float**);
+
+
+
+
 
 int main()
 {
+
 
 	float** positions;
 	int rows = 1000;
@@ -43,8 +60,8 @@ int main()
 	ModelParameters modelParameters;
 	modelParameters.indParameters = indParameters;
 	modelParameters.constantDeltasRatio = 0.9;
-	modelParameters.populationSize = 10000;
-	modelParameters.nrGenerations = 100;
+	modelParameters.populationSize = 1000;
+	modelParameters.nrGenerations = 10;
 	modelParameters.crossOverProb = 0.5;
 	modelParameters.mutationProb = 0.0;
 	modelParameters.creepProba = 0.8;
@@ -55,7 +72,7 @@ int main()
 
 	//Initilize population
 
-	Model model = Model("lamdaMu", modelParameters);
+	Model model = Model(modelParameters);
 	model.InitilizePopulation();
 	Individual bestIndividual(indParameters,0);
 
@@ -69,11 +86,13 @@ int main()
 
 	for (int i = 0; i < modelParameters.nrGenerations; i++) {
 
-		std::cout << "Genration Number:" << i << "   First individual fitness:" << model.population[0].fitness << std::endl;
+		//std::cout << "Genration Number:" << i << "   First individual fitness:" << model.population[0].fitness << std::endl;
 		model.maximumFitnessInCurrentGeneration = 0;
+
+
 		model.population[0] = bestIndividual;
-		std::cout << "BESTINDIVIDAL:" << bestIndividual.fitness << std::endl;
-		std::cout << "MODEL[0]:" << model.population[0].fitness << std::endl;
+		//std::cout << "BESTINDIVIDAL:" << bestIndividual.fitness << std::endl;
+		//std::cout << "MODEL[0]:" << model.population[0].fitness << std::endl;
 		//Evaluate individuals:
 		#pragma omp parallel for
 		for (auto& ind : model.population) {
@@ -106,8 +125,11 @@ int main()
 
 		//Elitisim
 
+
 		bestIndividual = model.population[model.bestIndividualId];
 		bestIndividual.id = 0;
+		bestIndividual.chromosome = model.population[model.bestIndividualId].chromosome;
+
 
 
 		for (auto& ind : model.population) {
@@ -123,8 +145,23 @@ int main()
 
 		}
 		*/
+
+		//std::cout << "HEEEEELLLLLLOOOO" <<  bestIndividual.chromosome[0] << std::endl;
 		
 	}
+
+	/*
+	//Save the best Indvidual as csv file:
+	std::ofstream myFile("output.csv");
+	for(int i = 0; i < bestIndividual.getLen(); i++){
+		myFile << std::to_string(bestIndividual.chromosome[i]);
+		myFile << ",";
+
+	}
+
+	myFile.close();
+	*/
+
 	
 
 	for (int i = 0; i < rows; i++) {
