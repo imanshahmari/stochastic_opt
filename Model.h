@@ -32,7 +32,6 @@ public:
     
     ModelParameters parameters;
     std::string modelType;
-
     std::vector<float> bestChromosomes;
 
 

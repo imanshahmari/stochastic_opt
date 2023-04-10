@@ -59,27 +59,25 @@ int main()
 
 	ModelParameters modelParameters;
 	modelParameters.indParameters = indParameters;
-	modelParameters.constantDeltasRatio = 0.9;
-	modelParameters.populationSize = 1000;
-	modelParameters.nrGenerations = 10;
-	modelParameters.crossOverProb = 0.5;
+	modelParameters.constantDeltasRatio = 0.7;
+	modelParameters.populationSize = 100;
+	modelParameters.nrGenerations = 20;
+	modelParameters.crossOverProb = 0.8;
 	modelParameters.mutationProb = 0.0;
 	modelParameters.creepProba = 0.8;
-	modelParameters.creepRate = 0.005;
+	modelParameters.creepRate = 0.0075;
 	modelParameters.tournamentProb = 0.9;
-	modelParameters.tournamentSize = 3;
+	modelParameters.tournamentSize = 5;
 	
 
 	//Initilize population
 
 	Model model = Model(modelParameters);
 	model.InitilizePopulation();
-	Individual bestIndividual(indParameters,0);
 
 	srand(time(NULL));
 	//Start Optimiziation loop:
 	float maxFitness;
-
 
 
 	model.maximumFitnessInCurrentGeneration = 0;
@@ -89,8 +87,7 @@ int main()
 		//std::cout << "Genration Number:" << i << "   First individual fitness:" << model.population[0].fitness << std::endl;
 		model.maximumFitnessInCurrentGeneration = 0;
 
-
-		model.population[0] = bestIndividual;
+		model.population[0].chromosome = model.bestChromosomes;
 		//std::cout << "BESTINDIVIDAL:" << bestIndividual.fitness << std::endl;
 		//std::cout << "MODEL[0]:" << model.population[0].fitness << std::endl;
 		//Evaluate individuals:
@@ -124,12 +121,10 @@ int main()
 		}
 
 		//Elitisim
-
-
-		bestIndividual = model.population[model.bestIndividualId];
-		bestIndividual.id = 0;
-		bestIndividual.chromosome = model.population[model.bestIndividualId].chromosome;
-
+		model.bestChromosomes = model.population[model.bestIndividualId].chromosome;
+		
+		std::cout << "best Ind ID:" << model.bestIndividualId << std::endl;
+		std::cout << "bestChromosome first element:" << model.bestChromosomes[0] << std::endl;
 
 
 		for (auto& ind : model.population) {
@@ -145,22 +140,21 @@ int main()
 
 		}
 		*/
-
-		//std::cout << "HEEEEELLLLLLOOOO" <<  bestIndividual.chromosome[0] << std::endl;
-		
 	}
 
-	/*
+	std::cout << "check 1" << std::endl;
+	std::cout << model.bestChromosomes[0] << std::endl;
+
+	std::cout << "check 2" << std::endl;
 	//Save the best Indvidual as csv file:
 	std::ofstream myFile("output.csv");
-	for(int i = 0; i < bestIndividual.getLen(); i++){
-		myFile << std::to_string(bestIndividual.chromosome[i]);
+	for(int i = 0; i < nrDeltaTs; i++){
+		//std::cout << std::to_string(model.bestChromosomes[i]) << std::endl;
+		myFile << std::to_string(model.bestChromosomes[i]);
 		myFile << ",";
-
 	}
-
 	myFile.close();
-	*/
+	
 
 	
 

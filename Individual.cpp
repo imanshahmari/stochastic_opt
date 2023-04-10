@@ -14,7 +14,6 @@ Individual::Individual(IndividualParameters passedParameters,int idNumber) {
     passedParameters.nrPositions;
     indParameters = passedParameters;
     chromLen = passedParameters.nrDeltaTs;
-    chromosome.setMaxSize(passedParameters.nrDeltaTs);
     id = idNumber;
     fitness = 0;
 
@@ -58,8 +57,7 @@ void Individual::InitilizeRandom() {
         ind[i] = randomArray[i] - randomArray[i - 1];
     }
     std::vector<float> indVector(std::begin(ind), std::end(ind));
-    MyVector<float> result(indVector, indParameters.nrDeltaTs);
-    chromosome = result;
+    chromosome = indVector;
 
 }
 
