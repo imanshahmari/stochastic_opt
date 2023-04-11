@@ -95,7 +95,7 @@ void Model::Mutate(Individual& ind) {
     for (int i = 0; i < ind.getLen(); i++) {
         float checkMutate = Individual::GenerateRandomFloat(0.0, 1.0);
         float checkCreep = Individual::GenerateRandomFloat(0.0, 1.0);
-        float mutationNumber = Individual::GenerateRandomFloat(0.0, 0.1);
+        float mutationNumber = Individual::GenerateRandomFloat(0.0, 0.03);
         if (checkMutate <= parameters.mutationProb) {
             if (checkCreep <= parameters.creepProba) {
                 ind.chromosome[i] = ind.chromosome[i] - (parameters.creepRate / 2) + mutationNumber * parameters.creepRate;

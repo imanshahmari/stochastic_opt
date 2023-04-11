@@ -59,15 +59,15 @@ int main()
 
 	ModelParameters modelParameters;
 	modelParameters.indParameters = indParameters;
-	modelParameters.constantDeltasRatio = 0.7;
-	modelParameters.populationSize = 100;
-	modelParameters.nrGenerations = 20;
-	modelParameters.crossOverProb = 0.8;
-	modelParameters.mutationProb = 0.0;
+	modelParameters.constantDeltasRatio = 1.0;
+	modelParameters.populationSize = 50000;
+	modelParameters.nrGenerations = 1000;
+	modelParameters.crossOverProb = 0.9;
+	modelParameters.mutationProb = 0.0001;
 	modelParameters.creepProba = 0.8;
-	modelParameters.creepRate = 0.0075;
-	modelParameters.tournamentProb = 0.9;
-	modelParameters.tournamentSize = 5;
+	modelParameters.creepRate = 0.008;
+	modelParameters.tournamentProb = 0.75;
+	modelParameters.tournamentSize = 3;
 	
 
 	//Initilize population
@@ -79,15 +79,17 @@ int main()
 	//Start Optimiziation loop:
 	float maxFitness;
 
-
-	model.maximumFitnessInCurrentGeneration = 0;
-
 	for (int i = 0; i < modelParameters.nrGenerations; i++) {
 
 		//std::cout << "Genration Number:" << i << "   First individual fitness:" << model.population[0].fitness << std::endl;
 		model.maximumFitnessInCurrentGeneration = 0;
 
-		model.population[0].chromosome = model.bestChromosomes;
+		if (i > 0){
+			for(int j = 0; j < modelParameters.populationSize * 0.1; j++){
+				model.population[j].chromosome = model.bestChromosomes;
+			}
+		}
+
 		//std::cout << "BESTINDIVIDAL:" << bestIndividual.fitness << std::endl;
 		//std::cout << "MODEL[0]:" << model.population[0].fitness << std::endl;
 		//Evaluate individuals:
@@ -131,9 +133,19 @@ int main()
 			model.Mutate(ind);
 		}
 
+		model.parameters.mutationProb += 0.000001;
+
 
 		std::cout << "Genration Number:" << i << "   Current Best Fitness:" << model.maximumFitnessInCurrentGeneration << std::endl;
+
 		/*
+		for(int i = 0;i < 20;i ++){
+			for (auto& el : model.population[i].chromosome)
+			std::cout << el;
+			std:: cout << std::endl;
+		;
+		}
+		
 		for (auto& ind : model.population) {
 
 			std::cout << "Fitness:" << ind.fitness << std::endl;

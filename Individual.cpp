@@ -23,7 +23,7 @@ Individual::Individual(IndividualParameters passedParameters,int idNumber) {
 void Individual::InitilizeConstant() {
     //intilize chromosome with constant deltas
     //float deltaT = 0.012;
-    float deltaT = GenerateRandomFloat(0.0, 0.5);
+    float deltaT = GenerateRandomFloat(0.01, 0.025);
     for (int i = 0; i < indParameters.nrDeltaTs; i++) {
         chromosome.push_back(deltaT);
     }
@@ -97,6 +97,11 @@ void Individual::EvaluateIndividual() {
     fitness = 1.0 / sum_psy;
     if (result > indParameters.endTime) {
         fitness = fitness - 1;
+    }
+    for(auto& el : chromosome){
+        if(el < 0.005){
+            fitness = fitness - 10;
+        }
     }
 }
 
